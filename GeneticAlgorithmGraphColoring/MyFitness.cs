@@ -17,29 +17,31 @@ namespace GeneticAlgorithmGraphColoring
             try
             {
                 MyChromosome localChromosome = (MyChromosome)chromosome;
-
-                if (localChromosome == null) throw new InvalidProgramException("Chromosome cannot be null");
-                int[] chromosomeValues = localChromosome.GetValues();
-
-                //tu byl graf
+                int[] genes = localChromosome.GetValues();
+                int numberOfEdges = graph.QuantityOfEdges;
                 bool hasAnyNeighborSameColor = false;
-                double countOfBadColoring = 0;
-                foreach (int vertex in graph.Vertexes)
+
+                int fitness = 0;
+
+                foreach (Edge edge in graph.Edges)
                 {
-                    IList<int> neighbors = graph.NeighborsList(vertex).ToList();
-                    int colorOfCurrentVertex = chromosomeValues[vertex - 1];
+                    var colorOfStartVertex = genes[edge.SourceVertex - 1];
+                    var colorOEndVertex = genes[edge.EndVertex - 1];
                     hasAnyNeighborSameColor = hasAnyNeighborSameColor ||
-                                              neighbors.Any(x => chromosomeValues[x - 1] == colorOfCurrentVertex);
-                    countOfBadColoring += (double)(neighbors.Count(x => chromosomeValues[x - 1] == colorOfCurrentVertex) - 1) /
-                                          neighbors.Count;
+                                              colorOfStartVertex == colorOEndVertex;
+                    if (colorOfStartVertex == colorOEndVertex)
+                    {
+                        fitness++;
+                    }
+                    Console.WriteLine("Liczba zlych kolorowan {0}", fitness);
                 }
 
                 if (hasAnyNeighborSameColor)
                 {
-                    return -(countOfBadColoring + graph.Vertexes.Count + 1);
+                    return -(fitness/numberOfEdges + graph.Vertexes.Count+1);
                 }
 
-                return -(chromosomeValues.ToList().Distinct().Count());
+                return -(genes.ToList().Distinct().Count());
             }
             catch (Exception ex)
             {

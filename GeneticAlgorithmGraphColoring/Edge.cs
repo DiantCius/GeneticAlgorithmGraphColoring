@@ -8,16 +8,16 @@ namespace GeneticAlgorithmGraphColoring
 {
     public class Edge
     {
-        public Edge(int vertexNumber, int sourceVertex, int targetVertex)
+        public Edge(int vertexNumber, int sourceVertex, int endVertex)
         {
             VertexNumber = vertexNumber;
             SourceVertex = sourceVertex;
-            TargetVertex = targetVertex;
+            EndVertex = endVertex;
         }
         public int VertexNumber { get; }
         public int SourceVertex { get; }
-        public int TargetVertex { get; }
+        public int EndVertex { get; }
 
-        public string PrintEdgeInOriginalForm => $"\r\n<{VertexNumber}><{SourceVertex}><{TargetVertex}>";
+        public string PrintEdge => $"\r\n<{VertexNumber}><{SourceVertex}><{EndVertex}>";
     }
 }

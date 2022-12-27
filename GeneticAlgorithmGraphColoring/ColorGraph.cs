@@ -2,9 +2,9 @@ using GeneticSharp;
 
 namespace GeneticAlgorithmGraphColoring
 {
-    public class GraphColoringRequest
+    public class ColoringRequest
     {
-        public GraphColoringRequest(int[] startValues, int population, int populationSize, Graph graph)
+        public ColoringRequest(int[] startValues, int population, int populationSize, Graph graph)
         {
             StartValues = startValues;
             Population = population;
@@ -18,9 +18,9 @@ namespace GeneticAlgorithmGraphColoring
         public Graph Graph { get; }
     }
 
-    public class GraphColoringResponse
+    public class ColoringResponse
     {
-        public GraphColoringResponse(ColoredGraph coloredGraph)
+        public ColoringResponse(ColoredGraph coloredGraph)
         {
             ColoredGraph = coloredGraph;
             Success = true;
@@ -32,59 +32,64 @@ namespace GeneticAlgorithmGraphColoring
     public class ColorGraph
     {
 
-        public GraphColoringResponse ColorGraphWithGeneticAlgorithm(GraphColoringRequest graphColoringRequest)
+        public ColoringResponse ColorGraphWithGeneticAlgorithm(ColoringRequest coloringRequest)
         {
-            Graph graph = graphColoringRequest.Graph;
+            var graph = coloringRequest.Graph;
 
-            MyChromosome chromosome = new MyChromosome(graphColoringRequest.StartValues.Length, graphColoringRequest.StartValues, graphColoringRequest.Population);
+            var chromosome = new MyChromosome(coloringRequest.StartValues.Length, coloringRequest.StartValues, coloringRequest.Population);
 
-            Population population = new Population(graphColoringRequest.PopulationSize, graphColoringRequest.PopulationSize, chromosome);
+            var population = new Population(coloringRequest.PopulationSize, coloringRequest.PopulationSize, chromosome);
 
-            MyFitness fitness = new MyFitness(graph);
+            var selection = new EliteSelection();
 
-            EliteSelection selection = new EliteSelection();
+            var mutation = new UniformMutation();
 
-            OnePointCrossover crossover = new OnePointCrossover();
+            var crossover = new OnePointCrossover();
 
-            MyMutation mutation = new MyMutation(graph);
+            var fitness = new MyFitness(graph);
 
-            //ilosc generacji
-            FitnessStagnationTermination termination = new FitnessStagnationTermination(10);
+            var geneticAlgorithm = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
 
-            GeneticAlgorithm ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
-            { Termination = termination, MutationProbability = 0.1f };
+            geneticAlgorithm.Termination = new GenerationNumberTermination(10);
+
             int latestFitness = int.MinValue;
+
             int bestFitness = 0;
+
             MyChromosome? bestChromosome = null;
 
-            ga.GenerationRan += (sender, e) =>
+            geneticAlgorithm.GenerationRan += (s,e) =>
             {
-                bestChromosome = (MyChromosome)ga.BestChromosome;
+                bestChromosome = (MyChromosome)geneticAlgorithm.BestChromosome;
+
                 bestFitness = (int)-bestChromosome.Fitness.Value;
 
                 if (bestFitness == latestFitness) return;
+
+                Console.WriteLine("wartość funkcji fitness:{0}", bestFitness);
+
                 latestFitness = bestFitness;
-                bestChromosome.GetValues();
-                Console.WriteLine("fitness: {0}", bestFitness);
+
             };
-            ga.TerminationReached += (sender, e) => { Console.WriteLine("Koniec generacji"); };
-            ga.Start();
+            geneticAlgorithm.Start();
 
-            Console.WriteLine("Koniec");
+            Console.WriteLine("Koniec algorytmu");
 
-            if (bestFitness > graph.Vertexes.Count) Console.WriteLine("fitness>ilosc wierzchołków");//return new GraphColoringResponse();
+            if (bestFitness > graph.Vertexes.Count) Console.WriteLine("fitness>liczba wierzchołków");
 
-            int[] resultGenType = bestChromosome.GetValues();
+            int[] genotype = bestChromosome.GetValues();
 
-            IDictionary<int, int> coloredVertex = new Dictionary<int, int>(graph.Vertexes.Count);
+            var coloredVertex = new Dictionary<int, int>(graph.Vertexes.Count);
 
             foreach (int vertex in graph.Vertexes)
             {
-                coloredVertex.Add(vertex, resultGenType[vertex - 1]);
+                coloredVertex.Add(vertex, genotype[vertex - 1]);
+                Console.WriteLine(genotype[vertex - 1]);
             }
-            ColoredGraph coloredGraph = new ColoredGraph(graph, coloredVertex);
 
-            var response = new GraphColoringResponse(coloredGraph);
+            var coloredGraph = new ColoredGraph(graph, coloredVertex);
+
+            var response = new ColoringResponse(coloredGraph);
 
             return response;
         }

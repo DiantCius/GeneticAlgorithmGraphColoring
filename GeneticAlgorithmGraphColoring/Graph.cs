@@ -20,6 +20,7 @@ namespace GeneticAlgorithmGraphColoring
             string[] separatingStrings = { "<", ">" };
 
             List<Edge> edges = new List<Edge>();
+
             for (int i = 1; i < fileLines.Length; i++)
             {
                 var edgeLine = fileLines[i].Split("\n");
@@ -32,20 +33,13 @@ namespace GeneticAlgorithmGraphColoring
             }
 
             Edges = edges;
-            Vertexes = edges.Select(x => x.SourceVertex).Union(edges.Select(y => y.TargetVertex)).Distinct().ToList();
+            Vertexes = edges.Select(x => x.SourceVertex).Union(edges.Select(y => y.EndVertex)).Distinct().ToList();
         }
 
         public int QuantityOfEdges { get; }
         public List<Edge> Edges { get; }
         public List<int> Vertexes { get; }
 
-        public IList<int> NeighborsList(int vertex)
-        {
-            IEnumerable<int> vertexFromStarting = Edges.Where(x => x.SourceVertex == vertex).Select(x => x.TargetVertex);
-            IEnumerable<int> vertexFromEnding = Edges.Where(x => x.TargetVertex == vertex).Select(x => x.SourceVertex);
-            return vertexFromEnding.Union(vertexFromStarting).Distinct().ToList();
-        }
-
-        public string PrintGraph() => Edges.Aggregate($"<{QuantityOfEdges}>", (current, edge) => $"{current}{edge.PrintEdgeInOriginalForm}");
+        public string PrintGraph() => Edges.Aggregate($"<{QuantityOfEdges}>", (current, edge) => $"{current}{edge.PrintEdge}");
     }
 }
