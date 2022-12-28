@@ -4,7 +4,7 @@ using GeneticAlgorithmGraphColoring;
 Console.WriteLine("Hello, World!");
 
 
-var filePath = @"C:\\Users\\misio\\Desktop\\graph.txt.txt";
+var filePath = @"C:\\Users\\misio\\Desktop\\graf12k.txt";
 
 if (File.Exists(filePath))
 {
@@ -12,7 +12,7 @@ if (File.Exists(filePath))
 
     var startValues = graph.Vertexes.ToArray();
 
-    var request = new ColoringRequest(startValues, 50, 50, graph);
+    var request = new ColoringRequest(startValues, 5, graph);
 
     var coloringService = new ColorGraph();
 

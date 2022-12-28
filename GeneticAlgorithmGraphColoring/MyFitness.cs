@@ -20,8 +20,10 @@ namespace GeneticAlgorithmGraphColoring
                 int[] genes = localChromosome.GetValues();
                 int numberOfEdges = graph.QuantityOfEdges;
                 bool hasAnyNeighborSameColor = false;
+                /*Console.WriteLine("chromosom do ewaluacji");
+                Console.WriteLine(string.Join("\n", localChromosome.GetValues())); */
 
-                int fitness = 0;
+               int fitness = 0;
 
                 foreach (Edge edge in graph.Edges)
                 {
@@ -33,7 +35,7 @@ namespace GeneticAlgorithmGraphColoring
                     {
                         fitness++;
                     }
-                    Console.WriteLine("Liczba zlych kolorowan {0}", fitness);
+                    //Console.WriteLine("Liczba zlych kolorowan {0}", fitness);
                 }
 
                 if (hasAnyNeighborSameColor)

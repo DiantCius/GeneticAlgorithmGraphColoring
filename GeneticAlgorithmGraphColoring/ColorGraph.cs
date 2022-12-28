@@ -41,18 +41,19 @@ namespace GeneticAlgorithmGraphColoring
 
             var selection = new EliteSelection();
 
-            var mutation = new UniformMutation();
+            //var mutation = new UniformMutation(true);
 
-            var crossover = new OnePointCrossover(2);
+            //var crossover = new OnePointCrossover(0);
 
-            //var mutation = new MyMutation(graph);
+            var mutation = new MyMutation(graph);
 
-            //var crossover = new MyCrossover();
+            var crossover = new MyCrossover(0);
 
             var fitness = new MyFitness(graph);
 
             var geneticAlgorithm = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
             geneticAlgorithm.MutationProbability = 0.2f;
+            geneticAlgorithm.CrossoverProbability = 0.8f;
 
 
             //geneticAlgorithm.Termination = new GenerationNumberTermination(100000);
@@ -62,7 +63,7 @@ namespace GeneticAlgorithmGraphColoring
 
             //geneticAlgorithm.CrossoverProbability = 0.8f;
 
-            /*int latestFitness = int.MinValue;
+            int latestFitness = int.MinValue;
 
             int bestFitness = 0;
 
@@ -80,7 +81,7 @@ namespace GeneticAlgorithmGraphColoring
 
                 latestFitness = bestFitness;
 
-            };*/
+            };
             geneticAlgorithm.TerminationReached += (sender, e) => { Console.WriteLine("This is the end of generations"); };
             geneticAlgorithm.Start();
             Console.WriteLine("ilosc generacji pod koniec {0}", geneticAlgorithm.GenerationsNumber);
@@ -89,13 +90,13 @@ namespace GeneticAlgorithmGraphColoring
 
             Console.WriteLine("Koniec algorytmu");
 
-            //if (bestFitness > graph.Vertexes.Count) Console.WriteLine("fitness>liczba wierzchołków");
+            if (bestFitness > graph.Vertexes.Count) Console.WriteLine("fitness>liczba wierzchołków");
 
-            var best = geneticAlgorithm.BestChromosome as MyChromosome;
-            int[] genotype = best.GetValues();
-            //int[] genotype = bestChromosome.GetValues();
+            //var best = geneticAlgorithm.BestChromosome as MyChromosome;
+            //int[] genotype = best.GetValues();
+            int[] genotype = bestChromosome.GetValues();
 
-            Console.WriteLine("najlepszy fitness: {0}", best.Fitness);
+            //Console.WriteLine("najlepszy fitness: {0}", best.Fitness);
 
             Console.WriteLine("genotyp dlugosc:{0}", genotype.Distinct().Count());
 
