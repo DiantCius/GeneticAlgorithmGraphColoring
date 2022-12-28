@@ -38,8 +38,10 @@ namespace GeneticAlgorithmGraphColoring
 
                 if (hasAnyNeighborSameColor)
                 {
-                    return -(fitness/numberOfEdges + graph.Vertexes.Count+1);
+                    //return -(fitness/numberOfEdges + graph.Vertexes.Count+1);
+                    return -(fitness+graph.Vertexes.Count);
                 }
+                //Console.WriteLine("liczba chromatyczna: {0}", genes.Distinct().Count());
 
                 return -(genes.ToList().Distinct().Count());
             }
