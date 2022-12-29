@@ -43,22 +43,22 @@ namespace GeneticAlgorithmGraphColoring
 
             //var mutation = new UniformMutation(true);
 
-            //var crossover = new OnePointCrossover(0);
+            var crossover = new OnePointCrossover(0);
 
             var mutation = new MyMutation(graph);
 
-            var crossover = new MyCrossover(0);
+            //var crossover = new MyCrossover(0);
 
             var fitness = new MyFitness(graph);
 
             var geneticAlgorithm = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
-            geneticAlgorithm.MutationProbability = 0.2f;
-            geneticAlgorithm.CrossoverProbability = 0.8f;
+            geneticAlgorithm.MutationProbability = 0.1f;
+            geneticAlgorithm.CrossoverProbability = 0.75f;
 
 
-            //geneticAlgorithm.Termination = new GenerationNumberTermination(100000);
-            //geneticAlgorithm.Termination = new FitnessStagnationTermination(100);
-            geneticAlgorithm.Termination = new FitnessThresholdTermination(-3);
+            //geneticAlgorithm.Termination = new GenerationNumberTermination(100000000);
+            //geneticAlgorithm.Termination = new FitnessStagnationTermination(50);
+            geneticAlgorithm.Termination = new FitnessThresholdTermination(-4);
 
 
             //geneticAlgorithm.CrossoverProbability = 0.8f;
